@@ -8,14 +8,16 @@ from nlm_ingestor.ingestor_utils.ing_named_tuples import LineStyle
 from . import processors
 
 class TextIngestor:
-    def __init__(self, doc_location, parse_options):
+    def __init__(self, doc_location, parse_options, content=None):
         self.logger = logging.getLogger(self.__class__.__name__)
         self.logger.setLevel(logging.INFO)
         render_format = parse_options.get("render_format", "all") \
             if parse_options else "all"
-       
-        with open(doc_location) as f:
-            raw_lines = f.readlines()
+        if content is None:
+            with open(doc_location) as f:
+                raw_lines = f.readlines()
+        else:
+            raw_lines = [content]
 
         blocks, _block_texts, _sents, _file_data, result, page_dim, num_pages = parse_blocks(
             raw_lines=raw_lines
